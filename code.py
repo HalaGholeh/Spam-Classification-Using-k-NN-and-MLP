@@ -6,6 +6,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 from sklearn.neural_network import MLPClassifier
+from sklearn.metrics import confusion_matrix
 
 TEST_SIZE = 0.3
 K = 3
@@ -76,7 +77,7 @@ def train_mlp_model(features, labels):
     Given a list of feature vectors and a list of labels, return a
     fitted MLP model trained on the data using the sklearn implementation.
     """
-    model = MLPClassifier()
+    model = MLPClassifier(hidden_layer_sizes=(10, 5), activation='logistic')
     model.fit(features, labels)
     return model
 
@@ -110,6 +111,13 @@ def main():
     predictions = model_nn.predict(X_test, K)
     accuracy, precision, recall, f1 = evaluate(y_test, predictions)
 
+    error = np.array(predictions) - np.array(y_test)
+
+    # Calculate the confusion matrix
+    confusion_mat = confusion_matrix(y_test, predictions)
+
+
+
 
     # Print results
     print("** k-NN Results **")
@@ -118,16 +126,21 @@ def main():
     print("Recall:", recall)
     print("F1:", f1)
 
-    error = np.array(predictions) - np.array(y_test)
     print("Error: " ,error)
     print("predictions : " , predictions)
     print("YTst" , y_test)
+
+    print("Confusion Matrix: \n", confusion_mat)
 
 
     # Train an MLP model and make predictions
     model_mlp = train_mlp_model(X_train, y_train)
     predictions = model_mlp.predict(X_test)
     accuracy, precision, recall, f1 = evaluate(y_test, predictions)
+    error1 = np.array(predictions) - np.array(y_test)
+
+    # Calculate the confusion matrix
+    confusion_mat = confusion_matrix(y_test, predictions)
 
     # Print results
     print("** MLP Results **")
@@ -136,13 +149,12 @@ def main():
     print("Recall:", recall)
     print("F1:", f1)
 
-    print(predictions)
-
-    error1 = np.array(predictions) - np.array(y_test)
     print("Error: " ,error1)
 
     print("predictions : ", predictions)
     print("YTst", y_test)
+
+    print("Confusion Matrix: \n", confusion_mat)
 
 
 
